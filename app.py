@@ -57,13 +57,15 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--training', default='training_data.csv', help='input training data file name')
-
     parser.add_argument('--output', default='submission.csv', help='output file name')
     args = parser.parse_args()
     
     forecast = main(args.training)
+    output_csv(output_filename = args.output, forecast = forecast, start = "2021-3-23", end = "2021-3-29")
+    
+    # test
     predict_date = [ datetime.strptime(f'2021-03-2{i}', '%Y-%m-%d')  for i in range(3, 10) ]
-    y_dict = pd.DataFrame({ 
+    y_dict = pd.DataFrame({ # 未來一周台電預測值
         'ds': ['2021-03-23', '2021-03-24', '2021-03-25', '2021-03-26', '2021-03-27', '2021-03-28', '2021-03-29'],
         'y': [3070, 3260, 3160, 3200, 2840, 3090, 3050]
     })
@@ -82,9 +84,6 @@ if __name__ == '__main__':
     # RMSE
     print(f'RMSE = {RMSE(forecast_list)}')
     
-    # output csv
-    output_csv(output_filename = args.output, forecast = forecast, start = "2021-3-23", end = "2021-3-29")
-
     # draw
     plt.plot(predict_date, y_list, color='red', label='real_value')
     plt.plot(predict_date, y_hat_list, color='blue', label='predicted_value')
